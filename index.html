@@ -3,115 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIONWEB3 - Tap & Earn</title>
+    <title>BionWeb3 Tap Game</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: linear-gradient(to bottom, #121212, #1e1e1e);
+            background-color: #121212;
             color: white;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: #1e1e1e;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-left: 15px;
         }
         h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #00FFAA;
-        }
-        #coinDisplay {
             font-size: 24px;
-            font-weight: bold;
-            padding: 10px;
-            background: white;
-            color: black;
-            border-radius: 10px;
-            display: inline-block;
-            margin-bottom: 20px;
+            color: #00bcd4;
         }
-        #tapButton {
-            font-size: 22px;
-            background: yellow;
-            color: black;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            transition: 0.2s;
+        .game-container {
+            margin-top: 30px;
         }
-        #tapButton:active {
+        .coin {
+            width: 100px;
+            height: 100px;
             background: gold;
-            transform: scale(0.95);
-        }
-        .progress-container {
-            width: 80%;
-            background: #333;
-            margin: auto;
-            border-radius: 10px;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            width: 0%;
-            height: 20px;
-            background: #00FFAA;
-            transition: width 0.3s;
-        }
-        #bonus {
-            margin-top: 15px;
-            background: #ff9900;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
+            border-radius: 50%;
+            box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
-            display: none;
+            margin: auto;
+            animation: bounce 0.5s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        .stats {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .upgrade-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .upgrade-btn:disabled {
+            background-color: gray;
         }
     </style>
 </head>
 <body>
 
-    <h1>BIONWEB3 - Tap & Earn Coins</h1>
-    <p>Tap the button below to earn coins and get daily bonuses!</p>
-    
-    <div id="coinDisplay">Coins: 0</div><br>
-    <button id="tapButton">🖱️ Tap to Earn!</button>
-    
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
+    <div class="header">
+        <h1>BIONWEB3</h1>
+        <img src="your-logo-url.png" alt="BionWeb3 Logo" class="logo"> <!-- Replace with your logo -->
     </div>
 
-    <button id="bonus">🎁 Claim Daily Bonus!</button>
-
-    <audio id="tapSound" src="https://www.fesliyanstudios.com/play-mp3/4382"></audio>
+    <div class="game-container">
+        <div class="coin" onclick="earnCoins()">💰</div>
+        <div class="stats">
+            <p>Coins: <span id="coinCount">0</span></p>
+            <button class="upgrade-btn" onclick="upgrade()" id="upgradeBtn">Upgrade (Cost: 10 Coins)</button>
+        </div>
+    </div>
 
     <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Makes the app full screen
+
         let coins = 0;
-        let goal = 100; // Progress bar target
-        let dailyBonusClaimed = false;
+        let tapValue = 1;
+        let upgradeCost = 10;
 
-        document.getElementById("tapButton").addEventListener("click", function() {
-            coins += 1;
-            document.getElementById("coinDisplay").innerText = "Coins: " + coins;
-            document.getElementById("tapSound").play();
+        function earnCoins() {
+            coins += tapValue;
+            document.getElementById("coinCount").innerText = coins;
+        }
 
-            let progress = (coins / goal) * 100;
-            document.getElementById("progressBar").style.width = progress + "%";
-
-            if (coins % 50 === 0) {
-                document.getElementById("bonus").style.display = "block";
+        function upgrade() {
+            if (coins >= upgradeCost) {
+                coins -= upgradeCost;
+                tapValue *= 2;
+                upgradeCost *= 2;
+                document.getElementById("coinCount").innerText = coins;
+                document.getElementById("upgradeBtn").innerText = `Upgrade (Cost: ${upgradeCost} Coins)`;
+            } else {
+                alert("Not enough coins to upgrade!");
             }
-        });
-
-        document.getElementById("bonus").addEventListener("click", function() {
-            if (!dailyBonusClaimed) {
-                coins += 20;
-                document.getElementById("coinDisplay").innerText = "Coins: " + coins;
-                document.getElementById("bonus").style.display = "none";
-                dailyBonusClaimed = true;
-            }
-        });
+        }
     </script>
 
 </body>
