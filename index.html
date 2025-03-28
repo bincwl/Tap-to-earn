@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tap & Earn Coins</title>
+    <title>BIONWEB3 - Tap & Earn</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: linear-gradient(to bottom, #ff9966, #ff5e62);
+            background: linear-gradient(to bottom, #121212, #1e1e1e);
             color: white;
             margin: 0;
             padding: 20px;
         }
         h1 {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 10px;
-        }
-        p {
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-weight: bold;
+            color: #00FFAA;
         }
         #coinDisplay {
             font-size: 24px;
@@ -47,21 +45,72 @@
             background: gold;
             transform: scale(0.95);
         }
+        .progress-container {
+            width: 80%;
+            background: #333;
+            margin: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background: #00FFAA;
+            transition: width 0.3s;
+        }
+        #bonus {
+            margin-top: 15px;
+            background: #ff9900;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <h1>💰 Tap & Earn Coins 💰</h1>
-    <p>Tap the button below to earn coins!</p>
+    <h1>BIONWEB3 - Tap & Earn Coins</h1>
+    <p>Tap the button below to earn coins and get daily bonuses!</p>
     
     <div id="coinDisplay">Coins: 0</div><br>
     <button id="tapButton">🖱️ Tap to Earn!</button>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <button id="bonus">🎁 Claim Daily Bonus!</button>
+
+    <audio id="tapSound" src="https://www.fesliyanstudios.com/play-mp3/4382"></audio>
 
     <script>
         let coins = 0;
+        let goal = 100; // Progress bar target
+        let dailyBonusClaimed = false;
+
         document.getElementById("tapButton").addEventListener("click", function() {
             coins += 1;
             document.getElementById("coinDisplay").innerText = "Coins: " + coins;
+            document.getElementById("tapSound").play();
+
+            let progress = (coins / goal) * 100;
+            document.getElementById("progressBar").style.width = progress + "%";
+
+            if (coins % 50 === 0) {
+                document.getElementById("bonus").style.display = "block";
+            }
+        });
+
+        document.getElementById("bonus").addEventListener("click", function() {
+            if (!dailyBonusClaimed) {
+                coins += 20;
+                document.getElementById("coinDisplay").innerText = "Coins: " + coins;
+                document.getElementById("bonus").style.display = "none";
+                dailyBonusClaimed = true;
+            }
         });
     </script>
 
